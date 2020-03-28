@@ -39,10 +39,10 @@ const follow = async req => {
     const user = await jwtService.verify(token);
 
     if (!user) {
-      throw errorService.constructError('UNAUTHORIZED', 401, 'Invalid authentication token');
+      throw errorService.constructError('AUTHENTICATION_FAIL', 401, 'Invalid authentication token');
     }
 
-    if (user.id === req.payload.id) {
+    if (user.id === req.body.id) {
       throw errorService.constructError('BAD_REQUEST', 400, 'Can not follow yourself');
     }
 
@@ -67,14 +67,14 @@ const unfollow = async req => {
     const user = await jwtService.verify(token);
 
     if (!user) {
-      throw errorService.constructError('UNAUTHORIZED', 401, 'Invalid authentication token');
+      throw errorService.constructError('AUTHENTICATION_FAIL', 401, 'Invalid authentication token');
     }
 
-    if (user.id === req.payload.id) {
+    if (user.id === req.body.id) {
       throw errorService.constructError('BAD_REQUEST', 400, 'Can not unfollow yourself');
     }
 
-    const _user = await User.findById(req.payload.id);
+    const _user = await User.findById(req.body.id);
     const index = _user.followers.indexOf(user.id);
 
     if (index < 0) {
