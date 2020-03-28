@@ -5,7 +5,7 @@ const errorService = require('../services/error.service');
 const userController = require('../controllers/user.controller');
 const authMiddleware = require('../middlewares/auth.middleware');
 
-router.post('/register', async (req, res) => {
+router.post('/register', async (req, res, next) => {
   try {
     const paramsToValidate = [
       { name: 'firstName', type: 'String' },
@@ -25,16 +25,13 @@ router.post('/register', async (req, res) => {
     return res.status(200).json({ status: 'Success', message: 'User registration successful' });
   } catch (err) {
     console.error('ERROR: ', err.message);
-    return res.status(err.code).json({
-      status: 'Error',
-      message: err.message
-    });
+    next(err);
   }
 });
 
 router.use(authMiddleware.authenticate);
 
-router.post('/follow', async (req, res) => {
+router.post('/follow', async (req, res, next) => {
   try {
     const paramsToValidate = [{ name: 'id', type: 'String' }];
     const validationErrors = validationService.validateRequestPayload(req, paramsToValidate);
@@ -47,14 +44,11 @@ router.post('/follow', async (req, res) => {
     return res.status(200).json({ status: 'Success', message: 'User followed successfully' });
   } catch (err) {
     console.error('ERROR: ', err.message);
-    return res.status(err.code).json({
-      status: 'Error',
-      message: err.message
-    });
+    next(err);
   }
 });
 
-router.post('/unfollow', async (req, res) => {
+router.post('/unfollow', async (req, res, next) => {
   try {
     const paramsToValidate = [{ name: 'id', type: 'String' }];
     const validationErrors = validationService.validateRequestPayload(req, paramsToValidate);
@@ -67,10 +61,7 @@ router.post('/unfollow', async (req, res) => {
     return res.status(200).json({ status: 'Success', message: 'User followed successfully' });
   } catch (err) {
     console.error('ERROR: ', err.message);
-    return res.status(err.code).json({
-      status: 'Error',
-      message: err.message
-    });
+    next(err);
   }
 });
 

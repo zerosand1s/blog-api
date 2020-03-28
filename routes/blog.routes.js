@@ -7,7 +7,7 @@ const authMiddleware = require('../middlewares/auth.middleware');
 
 router.use(authMiddleware.authenticate);
 
-router.post('/new-blog', async (req, res) => {
+router.post('/new-blog', async (req, res, next) => {
   try {
     const paramsToValidate = [
       { name: 'title', type: 'String' },
@@ -23,27 +23,21 @@ router.post('/new-blog', async (req, res) => {
     return res.status(200).json({ status: 'Success', message: 'Blog created successfully' });
   } catch (err) {
     console.error('ERROR: ', err.message);
-    return res.status(err.code).json({
-      status: 'Error',
-      message: err.message
-    });
+    next(err);
   }
 });
 
-router.get('/blogs', async (req, res) => {
+router.get('/blogs', async (req, res, next) => {
   try {
     const blogs = await blogController.getAllBlogs(req);
     return res.status(200).json({ status: 'Success', message: 'Blogs fetched successfully', data: blogs });
   } catch (err) {
     console.error('ERROR: ', err.message);
-    return res.status(err.code).json({
-      status: 'Error',
-      message: err.message
-    });
+    next(err);
   }
 });
 
-router.patch('/like', async (req, res) => {
+router.patch('/like', async (req, res, next) => {
   try {
     const paramsToValidate = [{ name: 'id', type: 'String' }];
     const validationErrors = validationService.validateRequestPayload(req, paramsToValidate);
@@ -56,14 +50,11 @@ router.patch('/like', async (req, res) => {
     return res.status(200).json({ status: 'Success', message: 'Blog liked successfully' });
   } catch (err) {
     console.error('ERROR: ', err.message);
-    return res.status(err.code).json({
-      status: 'Error',
-      message: err.message
-    });
+    next(err);
   }
 });
 
-router.patch('/dislike', async (req, res) => {
+router.patch('/dislike', async (req, res, next) => {
   try {
     const paramsToValidate = [{ name: 'id', type: 'String' }];
     const validationErrors = validationService.validateRequestPayload(req, paramsToValidate);
@@ -76,10 +67,7 @@ router.patch('/dislike', async (req, res) => {
     return res.status(200).json({ status: 'Success', message: 'Blog disliked successfully' });
   } catch (err) {
     console.error('ERROR: ', err.message);
-    return res.status(err.code).json({
-      status: 'Error',
-      message: err.message
-    });
+    next(err);
   }
 });
 

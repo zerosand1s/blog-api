@@ -4,7 +4,7 @@ const validationService = require('../services/validation.service');
 const errorService = require('../services/error.service');
 const authController = require('../controllers/auth.controller');
 
-router.post('/login', async (req, res) => {
+router.post('/login', async (req, res, next) => {
   try {
     const paramsToValidate = [
       { name: 'username', type: 'String' },
@@ -21,10 +21,7 @@ router.post('/login', async (req, res) => {
     return res.status(200).json({ status: 'Success', message: 'User logged in successfully' });
   } catch (err) {
     console.error('ERROR: ', err.message);
-    return res.status(err.code).json({
-      status: 'Error',
-      message: err.message
-    });
+    next(err);
   }
 });
 
