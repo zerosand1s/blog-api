@@ -58,7 +58,7 @@ const like = async req => {
   }
 };
 
-const dislike = async (req, h) => {
+const dislike = async req => {
   try {
     const token = req.get('Authorization');
     const user = await jwtService.verify(token);
