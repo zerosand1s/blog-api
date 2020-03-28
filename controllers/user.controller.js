@@ -7,7 +7,7 @@ const register = async req => {
     const payload = req.body;
 
     if (payload.password !== payload.confirmPassword) {
-      return new Error({
+      throw new Error({
         type: 'BAD_REQUEST',
         code: 400,
         message: 'Passwords do not match'
@@ -17,7 +17,7 @@ const register = async req => {
     const userWithSameUsername = await User.find({ username: payload.username });
 
     if (userWithSameUsername.length) {
-      return new Error({
+      throw new Error({
         type: 'BAD_REQUEST',
         code: 400,
         message: 'Username already exists'
@@ -35,8 +35,7 @@ const register = async req => {
 
     return user.save();
   } catch (err) {
-    console.error('ERROR: ', err);
-    return new Error({
+    throw new Error({
       type: 'SERVER_ERROR',
       code: 500,
       message: 'Something went wrong'
