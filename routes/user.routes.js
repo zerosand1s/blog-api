@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const validationService = require('../services/validation.service');
+const errorService = require('../services/error.service');
 const userController = require('../controllers/user.controller');
 
-router.post('/register', async (req, res, next) => {
+router.post('/register', async (req, res) => {
   try {
     const paramsToValidate = [
       { name: 'firstName', type: 'String' },
@@ -16,17 +17,13 @@ router.post('/register', async (req, res, next) => {
     const validationErrors = validationService.validateRequestPayload(req, paramsToValidate);
 
     if (validationErrors.length) {
-      throw new Error({
-        type: 'BAD_REQUEST',
-        code: 400,
-        message: validationErrors[0]
-      });
+      throw errorService.constructError('BAD_REQUEST', 400, validationErrors[0]);
     }
 
     await userController.register(req);
     return res.status(200).json({ status: 'Success', message: 'User registration successful' });
   } catch (err) {
-    console.error('ERROR: ', err);
+    console.error('ERROR: ', err.message);
     return res.status(err.code).json({
       status: 'Error',
       message: err.message

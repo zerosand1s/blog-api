@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwtService = require('../services/jwt.service');
+const errorService = require('../services/error.service');
 const User = require('../models/User');
 
 const register = async req => {
@@ -7,21 +8,13 @@ const register = async req => {
     const payload = req.body;
 
     if (payload.password !== payload.confirmPassword) {
-      throw new Error({
-        type: 'BAD_REQUEST',
-        code: 400,
-        message: 'Passwords do not match'
-      });
+      throw errorService.constructError('BAD_REQUEST', 400, 'Passwords do not match');
     }
 
     const userWithSameUsername = await User.find({ username: payload.username });
 
     if (userWithSameUsername.length) {
-      throw new Error({
-        type: 'BAD_REQUEST',
-        code: 400,
-        message: 'Username already exists'
-      });
+      throw errorService.constructError('BAD_REQUEST', 400, 'Username already exists');
     }
 
     const hash = await bcrypt.hash(payload.password, 10);
@@ -35,11 +28,8 @@ const register = async req => {
 
     return user.save();
   } catch (err) {
-    throw new Error({
-      type: 'SERVER_ERROR',
-      code: 500,
-      message: 'Something went wrong'
-    });
+    console.log('ERROR: ', err);
+    throw errorService.constructError('SERVER_ERROR', 500);
   }
 };
 
