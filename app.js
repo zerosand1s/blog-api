@@ -8,6 +8,7 @@ require('dotenv').config();
 
 const db = require('./db');
 
+const authRouter = require('./routes/auth.routes');
 const usersRouter = require('./routes/user.routes');
 const blogsRouter = require('./routes/blog.routes');
 
@@ -32,6 +33,7 @@ app.use(
 );
 app.options('*', cors());
 
+app.use('/auth', authRouter);
 app.use('/users', usersRouter);
 app.use('/blogs', blogsRouter);
 
