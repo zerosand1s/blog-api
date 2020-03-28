@@ -3,6 +3,9 @@ const router = express.Router();
 const validationService = require('../services/validation.service');
 const errorService = require('../services/error.service');
 const blogController = require('../controllers/blog.controller');
+const authMiddleware = require('../middlewares/auth.middleware');
+
+router.use(authMiddleware.authenticate);
 
 router.post('/new-blog', async (req, res) => {
   try {

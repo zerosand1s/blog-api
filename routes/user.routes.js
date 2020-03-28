@@ -3,6 +3,7 @@ const router = express.Router();
 const validationService = require('../services/validation.service');
 const errorService = require('../services/error.service');
 const userController = require('../controllers/user.controller');
+const authMiddleware = require('../middlewares/auth.middleware');
 
 router.post('/register', async (req, res) => {
   try {
@@ -30,6 +31,8 @@ router.post('/register', async (req, res) => {
     });
   }
 });
+
+router.use(authMiddleware.authenticate);
 
 router.post('/follow', async (req, res) => {
   try {

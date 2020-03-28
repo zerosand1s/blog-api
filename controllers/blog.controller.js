@@ -4,17 +4,10 @@ const Blog = require('../models/Blog');
 
 const create = async req => {
   try {
-    const token = req.get('Authorization');
-    const user = await jwtService.verify(token);
-
-    if (!user) {
-      throw errorService.constructError('AUTHENTICATION_FAIL', 401, 'Invalid authentication token');
-    }
-
     const blog = new Blog({
       title: req.body.title,
       body: req.body.body,
-      author: user._id
+      author: req.user._id
     });
 
     return blog.save();
@@ -26,13 +19,6 @@ const create = async req => {
 
 const getAllBlogs = async req => {
   try {
-    const token = req.get('Authorization');
-    const user = await jwtService.verify(token);
-
-    if (!user) {
-      throw errorService.constructError('AUTHENTICATION_FAIL', 401, 'Invalid authentication token');
-    }
-
     return Blog.find().populate('author');
   } catch (err) {
     console.log('ERROR: ', err);
@@ -42,13 +28,6 @@ const getAllBlogs = async req => {
 
 const like = async req => {
   try {
-    const token = req.get('Authorization');
-    const user = await jwtService.verify(token);
-
-    if (!user) {
-      throw errorService.constructError('AUTHENTICATION_FAIL', 401, 'Invalid authentication token');
-    }
-
     const blog = await Blog.findById(req.body.id);
     blog.likes = blog.likes + 1;
     return blog.save();
@@ -60,13 +39,6 @@ const like = async req => {
 
 const dislike = async req => {
   try {
-    const token = req.get('Authorization');
-    const user = await jwtService.verify(token);
-
-    if (!user) {
-      throw errorService.constructError('AUTHENTICATION_FAIL', 401, 'Invalid authentication token');
-    }
-
     const blog = await Blog.findById(req.body.id);
     blog.likes = blog.likes - 1;
     return blog.save();

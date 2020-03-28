@@ -35,13 +35,6 @@ const register = async req => {
 
 const follow = async req => {
   try {
-    const token = req.get('Authorization');
-    const user = await jwtService.verify(token);
-
-    if (!user) {
-      throw errorService.constructError('AUTHENTICATION_FAIL', 401, 'Invalid authentication token');
-    }
-
     if (user.id === req.body.id) {
       throw errorService.constructError('BAD_REQUEST', 400, 'Can not follow yourself');
     }
@@ -63,13 +56,6 @@ const follow = async req => {
 
 const unfollow = async req => {
   try {
-    const token = req.get('Authorization');
-    const user = await jwtService.verify(token);
-
-    if (!user) {
-      throw errorService.constructError('AUTHENTICATION_FAIL', 401, 'Invalid authentication token');
-    }
-
     if (user.id === req.body.id) {
       throw errorService.constructError('BAD_REQUEST', 400, 'Can not unfollow yourself');
     }
