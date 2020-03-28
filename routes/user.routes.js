@@ -31,4 +31,44 @@ router.post('/register', async (req, res) => {
   }
 });
 
+router.post('/follow', async (req, res) => {
+  try {
+    const paramsToValidate = [{ name: 'id', type: 'String' }];
+    const validationErrors = validationService.validateRequestPayload(req, paramsToValidate);
+
+    if (validationErrors.length) {
+      throw errorService.constructError('BAD_REQUEST', 400, validationErrors[0]);
+    }
+
+    await userController.follow(req);
+    return res.status(200).json({ status: 'Success', message: 'User followed successfully' });
+  } catch (err) {
+    console.error('ERROR: ', err.message);
+    return res.status(err.code).json({
+      status: 'Error',
+      message: err.message
+    });
+  }
+});
+
+router.post('/unfollow', async (req, res) => {
+  try {
+    const paramsToValidate = [{ name: 'id', type: 'String' }];
+    const validationErrors = validationService.validateRequestPayload(req, paramsToValidate);
+
+    if (validationErrors.length) {
+      throw errorService.constructError('BAD_REQUEST', 400, validationErrors[0]);
+    }
+
+    await userController.unfollow(req);
+    return res.status(200).json({ status: 'Success', message: 'User followed successfully' });
+  } catch (err) {
+    console.error('ERROR: ', err.message);
+    return res.status(err.code).json({
+      status: 'Error',
+      message: err.message
+    });
+  }
+});
+
 module.exports = router;

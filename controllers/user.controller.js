@@ -33,61 +33,59 @@ const register = async req => {
   }
 };
 
-const follow = async (req, h) => {
+const follow = async req => {
   try {
-    const token = req.headers.authorization;
+    const token = req.get('Authorization');
     const user = await jwtService.verify(token);
 
     if (!user) {
-      return h.response({ status: 'Error', message: 'Invalid authentication token' }).code(401);
+      throw errorService.constructError('UNAUTHORIZED', 401, 'Invalid authentication token');
     }
 
     if (user.id === req.payload.id) {
-      return h.response({ status: 'Error', message: 'Can not follow self' }).code(401);
+      throw errorService.constructError('BAD_REQUEST', 400, 'Can not follow yourself');
     }
 
-    const _user = await User.findById(req.payload.id);
+    const _user = await User.findById(req.body.id);
     const index = _user.followers.indexOf(user.id);
 
     if (index >= 0) {
-      return h.response({ status: 'Success', message: 'You already follow this user' }).code(200);
+      throw errorService.constructError('BAD_REQUEST', 400, 'You already follow this user');
     }
 
     _user.followers.push(user.id);
-    await _user.save();
-    return h.response({ status: 'Success', message: 'Followed user successfully' }).code(200);
+    return _user.save();
   } catch (err) {
-    console.error('Error while creating new user: ', err);
-    return h.response({ status: 'Error', message: 'Something went wrong' }).code(500);
+    console.log('ERROR: ', err);
+    throw errorService.constructError('SERVER_ERROR', 500);
   }
 };
 
-const unfollow = async (req, h) => {
+const unfollow = async req => {
   try {
-    const token = req.headers.authorization;
+    const token = req.get('Authorization');
     const user = await jwtService.verify(token);
 
     if (!user) {
-      return h.response({ status: 'Error', message: 'Invalid authentication token' }).code(401);
+      throw errorService.constructError('UNAUTHORIZED', 401, 'Invalid authentication token');
     }
 
     if (user.id === req.payload.id) {
-      return h.response({ status: 'Error', message: 'Can not unfollow self' }).code(401);
+      throw errorService.constructError('BAD_REQUEST', 400, 'Can not unfollow yourself');
     }
 
     const _user = await User.findById(req.payload.id);
     const index = _user.followers.indexOf(user.id);
 
     if (index < 0) {
-      throw new Error('User not found in followers list');
+      throw errorService.constructError('BAD_REQUEST', 400, 'You do not follow this user');
     }
 
     _user.followers.splice(index, 1);
-    await _user.save();
-    return h.response({ status: 'Success', message: 'Unfollowed user successfully' }).code(200);
+    return _user.save();
   } catch (err) {
-    console.error('Error while creating new user: ', err);
-    return h.response({ status: 'Error', message: 'Something went wrong' }).code(500);
+    console.log('ERROR: ', err);
+    throw errorService.constructError('SERVER_ERROR', 500);
   }
 };
 
