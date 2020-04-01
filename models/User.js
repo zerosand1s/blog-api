@@ -10,7 +10,8 @@ const userSchema = new Schema(
     password: { type: String, select: false },
     follows: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-    blogs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Blog' }]
+    blogs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Blog' }],
+    tags: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tag' }]
   },
   { timestamps: true }
 );
