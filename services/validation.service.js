@@ -8,11 +8,15 @@ const validateRequestPayload = (req, paramsToValidate) => {
       errors.push(`Missing parameter: ${param.name}`);
     }
 
-    if (param.type === 'Number' && isNaN(payload[param.name])) {
+    if (payload.hasOwnProperty(param.name) && param.type === 'Number' && isNaN(payload[param.name])) {
       errors.push(`Invalid parameter: ${param.name}`);
     }
 
-    if (param.isEmail && !regex.test(payload[param.name])) {
+    if (payload.hasOwnProperty(param.name) && param.type === 'List' && !payload[param.name].length) {
+      errors.push(`${param.name.capitalize()} cannot be empty`);
+    }
+
+    if (payload.hasOwnProperty(param.name) && param.isEmail && !regex.test(payload[param.name])) {
       errors.push(`Invalid email address: ${param.name}`);
     }
   });

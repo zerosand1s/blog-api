@@ -1,18 +1,20 @@
-const errorService = require('../services/error.service');
 const Blog = require('../models/Blog');
+const tagController = require('../controllers/tag.controller');
 
 const create = async req => {
   try {
+    const tagIds = await tagController.create(req.body.tags);
     const blog = new Blog({
       title: req.body.title,
       body: req.body.body,
-      author: req.user._id
+      author: req.user._id,
+      tags: tagIds
     });
 
     return blog.save();
   } catch (err) {
     console.log('ERROR: ', err);
-    throw errorService.constructError('SERVER_ERROR', 500);
+    throw err;
   }
 };
 
@@ -21,7 +23,7 @@ const getAllBlogs = async req => {
     return Blog.find().populate('author');
   } catch (err) {
     console.log('ERROR: ', err);
-    throw errorService.constructError('SERVER_ERROR', 500);
+    throw err;
   }
 };
 
@@ -32,7 +34,7 @@ const like = async req => {
     return blog.save();
   } catch (err) {
     console.log('ERROR: ', err);
-    throw errorService.constructError('SERVER_ERROR', 500);
+    throw err;
   }
 };
 
@@ -43,7 +45,7 @@ const dislike = async req => {
     return blog.save();
   } catch (err) {
     console.log('ERROR: ', err);
-    throw errorService.constructError('SERVER_ERROR', 500);
+    throw err;
   }
 };
 

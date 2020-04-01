@@ -11,7 +11,8 @@ router.post('/new-blog', async (req, res, next) => {
   try {
     const paramsToValidate = [
       { name: 'title', type: 'String' },
-      { name: 'body', type: 'String' }
+      { name: 'body', type: 'String' },
+      { name: 'tags', type: 'List' }
     ];
     const validationErrors = validationService.validateRequestPayload(req, paramsToValidate);
 
