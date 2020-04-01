@@ -18,9 +18,19 @@ const create = async req => {
   }
 };
 
-const getAllBlogs = async req => {
+const getMyBlogs = async req => {
   try {
-    return Blog.find().populate('author');
+    return Blog.find({ author: req.user._id });
+  } catch (err) {
+    console.log('ERROR: ', err);
+    throw err;
+  }
+};
+
+const getBlogsByTag = async tagName => {
+  try {
+    const tagDetails = await tagController.get(tagName);
+    return Blog.find({ tags: tagDetails._id });
   } catch (err) {
     console.log('ERROR: ', err);
     throw err;
@@ -51,7 +61,8 @@ const dislike = async req => {
 
 module.exports = {
   create,
-  getAllBlogs,
+  getMyBlogs,
+  getBlogsByTag,
   like,
   dislike
 };

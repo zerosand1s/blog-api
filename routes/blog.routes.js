@@ -28,9 +28,20 @@ router.post('/new-blog', async (req, res, next) => {
   }
 });
 
-router.get('/blogs', async (req, res, next) => {
+router.get('/my-blogs', async (req, res, next) => {
   try {
-    const blogs = await blogController.getAllBlogs(req);
+    const blogs = await blogController.getMyBlogs(req);
+    return res.status(200).json({ status: 'Success', message: 'Blogs fetched successfully', data: blogs });
+  } catch (err) {
+    console.error('ERROR: ', err.message);
+    next(err);
+  }
+});
+
+router.get('/tag/:tag', async (req, res, next) => {
+  try {
+    const tag = req.params.tag;
+    const blogs = await blogController.getBlogsByTag(tag);
     return res.status(200).json({ status: 'Success', message: 'Blogs fetched successfully', data: blogs });
   } catch (err) {
     console.error('ERROR: ', err.message);

@@ -20,6 +20,17 @@ const create = tagNames => {
   }
 };
 
+const get = name => {
+  try {
+    name = name.toLowerCase();
+    return Tag.findOne({ name });
+  } catch (err) {
+    console.log('ERROR: ', err);
+    throw err;
+  }
+};
+
 module.exports = {
+  get,
   create
 };
