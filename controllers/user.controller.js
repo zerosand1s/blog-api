@@ -32,6 +32,15 @@ const register = async req => {
   }
 };
 
+const getUserByUsername = username => {
+  try {
+    return User.find({ username: username }).populate('blogs');
+  } catch (err) {
+    console.log('ERROR: ', err);
+    throw err;
+  }
+};
+
 const follow = async req => {
   try {
     if (user.id === req.body.id) {
@@ -76,6 +85,7 @@ const unfollow = async req => {
 
 module.exports = {
   register,
+  getUserByUsername,
   follow,
   unfollow
 };

@@ -31,6 +31,17 @@ router.post('/register', async (req, res, next) => {
 
 router.use(authMiddleware.authenticate);
 
+router.get('/:username', async (req, res, next) => {
+  try {
+    const username = req.params.username;
+    const user = await userController.getUserByUsername(username);
+    return res.status(200).json({ status: 'Success', message: 'Blogs fetched successfully', data: user });
+  } catch (err) {
+    console.error('ERROR: ', err.message);
+    next(err);
+  }
+});
+
 router.post('/follow', async (req, res, next) => {
   try {
     const paramsToValidate = [{ name: 'id', type: 'String' }];

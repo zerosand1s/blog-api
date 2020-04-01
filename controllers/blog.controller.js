@@ -1,4 +1,5 @@
 const Blog = require('../models/Blog');
+const User = require('../models/User');
 const tagController = require('../controllers/tag.controller');
 
 const create = async req => {
@@ -11,7 +12,8 @@ const create = async req => {
       tags: tagIds
     });
 
-    return blog.save();
+    const savedBlog = await blog.save();
+    return User.updateOne({ username: req.user.username }, { $push: { blogs: savedBlog._id } });
   } catch (err) {
     console.log('ERROR: ', err);
     throw err;
