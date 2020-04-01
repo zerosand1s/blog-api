@@ -1,4 +1,3 @@
-const jwtService = require('../services/jwt.service');
 const errorService = require('../services/error.service');
 const Blog = require('../models/Blog');
 

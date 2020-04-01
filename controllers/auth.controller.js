@@ -20,7 +20,7 @@ const login = async req => {
     return jwtService.sign({ id: user._id });
   } catch (err) {
     console.log('ERROR: ', err);
-    throw errorService.constructError('SERVER_ERROR', 500);
+    throw err;
   }
 };
 

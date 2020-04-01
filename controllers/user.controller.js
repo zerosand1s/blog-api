@@ -1,5 +1,4 @@
 const bcrypt = require('bcrypt');
-const jwtService = require('../services/jwt.service');
 const errorService = require('../services/error.service');
 const User = require('../models/User');
 
@@ -29,7 +28,7 @@ const register = async req => {
     return user.save();
   } catch (err) {
     console.log('ERROR: ', err);
-    throw errorService.constructError('SERVER_ERROR', 500);
+    throw err;
   }
 };
 
@@ -50,7 +49,7 @@ const follow = async req => {
     return _user.save();
   } catch (err) {
     console.log('ERROR: ', err);
-    throw errorService.constructError('SERVER_ERROR', 500);
+    throw err;
   }
 };
 
@@ -71,7 +70,7 @@ const unfollow = async req => {
     return _user.save();
   } catch (err) {
     console.log('ERROR: ', err);
-    throw errorService.constructError('SERVER_ERROR', 500);
+    throw err;
   }
 };
 
