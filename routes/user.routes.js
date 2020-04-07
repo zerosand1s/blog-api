@@ -3,6 +3,7 @@ const router = express.Router();
 const validationService = require('../services/validation.service');
 const errorService = require('../services/error.service');
 const userController = require('../controllers/user.controller');
+const tagController = require('../controllers/user.controller');
 const authMiddleware = require('../middlewares/auth.middleware');
 
 router.post('/register', async (req, res, next) => {
@@ -36,6 +37,16 @@ router.get('/:username', async (req, res, next) => {
     const username = req.params.username;
     const user = await userController.getUserByUsername(username);
     return res.status(200).json({ status: 'Success', message: 'Blogs fetched successfully', data: user });
+  } catch (err) {
+    console.error('ERROR: ', err.message);
+    next(err);
+  }
+});
+
+router.get('/tags/my-tags', async (req, res, next) => {
+  try {
+    const tags = await userController.getUserTagsByUsername(req.user.username);
+    return res.status(200).json({ status: 'Success', message: 'Tags fetched successfully', data: { tags } });
   } catch (err) {
     console.error('ERROR: ', err.message);
     next(err);

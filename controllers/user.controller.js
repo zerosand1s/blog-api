@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const errorService = require('../services/error.service');
 const User = require('../models/User');
 
-const register = async req => {
+const register = async (req) => {
   try {
     const payload = req.body;
 
@@ -32,7 +32,7 @@ const register = async req => {
   }
 };
 
-const getUserByUsername = username => {
+const getUserByUsername = (username) => {
   try {
     return User.find({ username: username }).populate('blogs');
   } catch (err) {
@@ -41,7 +41,17 @@ const getUserByUsername = username => {
   }
 };
 
-const follow = async req => {
+const getUserTagsByUsername = async (username) => {
+  try {
+    const user = await User.find({ username: username }).populate('tags');
+    return user[0].tags.map((tag) => tag.name);
+  } catch (err) {
+    console.log('ERROR: ', err);
+    throw err;
+  }
+};
+
+const follow = async (req) => {
   try {
     if (user.id === req.body.id) {
       throw errorService.constructError('BAD_REQUEST', 400, 'Can not follow yourself');
@@ -62,7 +72,7 @@ const follow = async req => {
   }
 };
 
-const unfollow = async req => {
+const unfollow = async (req) => {
   try {
     if (user.id === req.body.id) {
       throw errorService.constructError('BAD_REQUEST', 400, 'Can not unfollow yourself');
@@ -86,6 +96,7 @@ const unfollow = async req => {
 module.exports = {
   register,
   getUserByUsername,
+  getUserTagsByUsername,
   follow,
   unfollow
 };
