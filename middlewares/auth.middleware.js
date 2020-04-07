@@ -1,9 +1,19 @@
 const jwtService = require('../services/jwt.service');
 const errorService = require('../services/error.service');
+const errorMiddleware = require('./error.middleware');
 
 const authenticate = async (req, res, next) => {
   try {
     const token = req.get('Authorization');
+
+    if (!token) {
+      throw errorService.constructError(
+        'AUTHENTICATION_FAIL',
+        401,
+        'Authentication token not present in request header'
+      );
+    }
+
     const user = await jwtService.verify(token);
 
     if (!user) {
@@ -13,16 +23,14 @@ const authenticate = async (req, res, next) => {
     req.user = user;
     next();
   } catch (err) {
-    console.error('ERROR: ', err.message);
-
     if (err.name === 'TokenExpiredError') {
-      err = errorService.constructError('TOKEN_EXPIRED', 401, 'Authentication token is expired');
+      err = errorService.constructError('AUTHENTICATION_FAIL', 401, 'Authentication token is expired');
+    }
+    if (err.name === 'JsonWebTokenError') {
+      err = errorService.constructError('AUTHENTICATION_FAIL', 401, 'Invalid authentication token');
     }
 
-    return res.status(err.code).json({
-      status: 'Error',
-      message: err.message
-    });
+    errorMiddleware.handleError(err, res);
   }
 };
 
