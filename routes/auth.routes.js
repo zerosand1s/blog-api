@@ -17,8 +17,7 @@ router.post('/login', async (req, res, next) => {
     }
 
     const token = await authController.login(req);
-    res.cookie('token', token, { httpOnly: true });
-    return res.status(200).json({ status: 'Success', message: 'User logged in successfully' });
+    return res.status(200).json({ status: 'Success', message: 'User logged in successfully', data: { token } });
   } catch (err) {
     console.error('ERROR: ', err.message);
     next(err);
