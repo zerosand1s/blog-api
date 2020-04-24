@@ -32,9 +32,10 @@ const register = async (req) => {
   }
 };
 
-const getUserByUsername = (username) => {
+const getUserByUsername = async (username) => {
   try {
-    return User.find({ username: username }).populate('blogs');
+    const users = await User.find({ username: username }).populate('blogs');
+    return users[0];
   } catch (err) {
     console.log('ERROR: ', err);
     throw err;

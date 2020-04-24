@@ -16,8 +16,8 @@ router.post('/login', async (req, res, next) => {
       throw errorService.constructError('BAD_REQUEST', 400, validationErrors[0]);
     }
 
-    const token = await authController.login(req);
-    return res.status(200).json({ status: 'Success', message: 'User logged in successfully', data: { token } });
+    const data = await authController.login(req);
+    return res.status(200).json({ status: 'Success', message: 'User logged in successfully', data: data });
   } catch (err) {
     console.error('ERROR: ', err.message);
     next(err);

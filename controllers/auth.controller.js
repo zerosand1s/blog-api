@@ -17,7 +17,11 @@ const login = async req => {
       throw errorService.constructError('BAD_REQUEST', 400, 'Invalid username or password');
     }
 
-    return jwtService.sign({ id: user._id });
+    const token = await jwtService.sign({ id: user._id });
+    return {
+      token: token,
+      username: user.username
+    };
   } catch (err) {
     console.log('ERROR: ', err);
     throw err;

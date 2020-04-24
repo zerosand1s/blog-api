@@ -36,7 +36,8 @@ router.get('/:username', async (req, res, next) => {
   try {
     const username = req.params.username;
     const user = await userController.getUserByUsername(username);
-    return res.status(200).json({ status: 'Success', message: 'Blogs fetched successfully', data: user });
+    console.log(user)
+    return res.status(200).json({ status: 'Success', message: 'User fetched successfully', data: { user } });
   } catch (err) {
     console.error('ERROR: ', err.message);
     next(err);
