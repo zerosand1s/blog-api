@@ -1,5 +1,6 @@
 const Promise = require('bluebird');
 const _ = require('lodash');
+const User = require('../models/User');
 const Tag = require('../models/Tag');
 
 const create = tagNames => {
@@ -30,7 +31,38 @@ const get = name => {
   }
 };
 
+const getAllTags = () => {
+  try {
+    return Tag.find();
+  } catch (err) {
+    console.log('ERROR: ', err);
+    throw err;
+  }
+};
+
+const getUserTagsByUsername = async (username) => {
+  try {
+    const user = await User.find({ username: username }).populate('tags');
+    return user[0].tags;
+  } catch (err) {
+    console.log('ERROR: ', err);
+    throw err;
+  }
+};
+
+const follow = async (req) => {
+  try {
+    return User.updateOne({ username: req.user.username }, { $push: { tags: req.body.id } });
+  } catch (err) {
+    console.log('ERROR: ', err);
+    throw err;
+  }
+};
+
 module.exports = {
   get,
-  create
+  create,
+  getAllTags,
+  getUserTagsByUsername,
+  follow
 };

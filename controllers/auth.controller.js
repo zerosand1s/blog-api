@@ -18,10 +18,7 @@ const login = async req => {
     }
 
     const token = await jwtService.sign({ id: user._id });
-    return {
-      token: token,
-      username: user.username
-    };
+    return { token, user };
   } catch (err) {
     console.log('ERROR: ', err);
     throw err;

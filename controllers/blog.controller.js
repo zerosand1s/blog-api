@@ -22,7 +22,7 @@ const create = async req => {
 
 const getMyBlogs = async req => {
   try {
-    return Blog.find({ author: req.user._id });
+    return Blog.find({ author: req.user._id }).populate('author', 'username');
   } catch (err) {
     console.log('ERROR: ', err);
     throw err;

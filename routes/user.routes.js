@@ -44,16 +44,6 @@ router.get('/:username', async (req, res, next) => {
   }
 });
 
-router.get('/tags/my-tags', async (req, res, next) => {
-  try {
-    const tags = await userController.getUserTagsByUsername(req.user.username);
-    return res.status(200).json({ status: 'Success', message: 'Tags fetched successfully', data: { tags } });
-  } catch (err) {
-    console.error('ERROR: ', err.message);
-    next(err);
-  }
-});
-
 router.post('/follow', async (req, res, next) => {
   try {
     const paramsToValidate = [{ name: 'id', type: 'String' }];

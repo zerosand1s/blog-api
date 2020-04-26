@@ -11,6 +11,7 @@ const db = require('./db');
 const authRouter = require('./routes/auth.routes');
 const usersRouter = require('./routes/user.routes');
 const blogsRouter = require('./routes/blog.routes');
+const tagsRouter = require('./routes/tags.routes');
 
 const errorMiddleware = require('./middlewares/error.middleware');
 const errorService = require('./services/error.service');
@@ -33,9 +34,10 @@ app.use(cors());
 app.use('/auth', authRouter);
 app.use('/users', usersRouter);
 app.use('/blogs', blogsRouter);
+app.use('/tags', tagsRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 

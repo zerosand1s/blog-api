@@ -42,16 +42,6 @@ const getUserByUsername = async (username) => {
   }
 };
 
-const getUserTagsByUsername = async (username) => {
-  try {
-    const user = await User.find({ username: username }).populate('tags');
-    return user[0].tags.map((tag) => tag.name);
-  } catch (err) {
-    console.log('ERROR: ', err);
-    throw err;
-  }
-};
-
 const follow = async (req) => {
   try {
     if (user.id === req.body.id) {
@@ -97,7 +87,6 @@ const unfollow = async (req) => {
 module.exports = {
   register,
   getUserByUsername,
-  getUserTagsByUsername,
   follow,
   unfollow
 };
